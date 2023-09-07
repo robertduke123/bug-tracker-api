@@ -12,10 +12,11 @@ app.use(cors())
 const db = knex({
   client: 'pg',
   connection: {
-    host: '127.0.0.1',
-    user: 'postgres',
-    password: 'Wiggles123',
-    database: 'bug-tracker'
+    host: 'dpg-cjsm5036fquc739llpq0-a',
+    port: 5432,
+    user: 'bug_tracker_db_tcja_user',
+    password: 'SXZ8USIovC1NqlabbWQOcOozDIA5EKKx',
+    database: 'bug_tracker_db_tcja'
   }
 });
 
