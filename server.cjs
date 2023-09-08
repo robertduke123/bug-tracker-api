@@ -184,7 +184,7 @@ app.get('/projects', (req, res) => {
             }
             finalProjects.push(project)
         })
-        db('tickets').select('*')
+        db('tickets').select('*').orderBy('id')
         .then(tickets => {
             let finalTicket = {}
             
