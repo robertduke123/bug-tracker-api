@@ -35,9 +35,9 @@ app.post('/signin', (req, res) => {
     db.select('email', 'hash').from('login')
     .where('email', '=', email)
     .then(data => {
-        if(email !== 'admin' ||
-            email !== 'employee'
-        ){
+        // if(email !== 'admin' ||
+        //     email !== 'employee'
+        // ){
             const isValid = bcrypt.compareSync(password, data[0].hash)
         if(isValid) {
             return db.select('*').from('users')
@@ -49,13 +49,13 @@ app.post('/signin', (req, res) => {
         } else {
             res.status(400).json('wrong cridentials')
         }
-        } else {
-            return db.select('*').from('users')
-            .where('email', '=', email)
-            .then(user => {
-                res.json(user[0])
-            })
-        }
+        // } else {
+        //     return db.select('*').from('users')
+        //     .where('email', '=', email)
+        //     .then(user => {
+        //         res.json(user[0])
+        //     })
+        // }
         
     })
     .catch(err =>  res.status(400).json('wrong cridentials'))
