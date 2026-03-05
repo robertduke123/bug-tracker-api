@@ -1,9 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const bodyparser = require("body-parser");
-const bcrypt = require("bcrypt-nodejs");
 const cors = require("cors");
-const knex = require("knex");
 const {
 	signIn,
 	getAccessToken,
@@ -12,7 +10,6 @@ const {
 	registerUser,
 	editUser,
 	deleteDocument,
-	deleteField,
 	getTeam,
 	getUserById,
 	getProjects,
@@ -32,38 +29,8 @@ const app = express();
 app.use(bodyparser.json());
 app.use(cors());
 
-// const db = knex({
-// 	client: "pg",
-// 	connection: {
-// 		host: process.env.RENDER_HOST,
-// 		port: 5432,
-// 		user: process.env.RENDER_USER,
-// 		password: process.env.RENDER_PASSWORD,
-// 		database: process.env.RENDER_DATABASE,
-// 	},
-// });
-
-const db = knex({
-	client: "pg",
-	connection: {
-		host: "127.0.0.1",
-		user: "postgres",
-		password: "Wiggles123",
-		database: "bug-tracker",
-	},
-});
-
-console.log();
-
 app.get("/", (req, res) => {
 	res.json("it is working!");
-});
-
-app.get("/test", (req, res) => {
-	db.select("*")
-		.from("login")
-		.then((data) => res.json(data))
-		.catch((err) => res.json(err));
 });
 
 app.post("/signin", async (req, res) => {
@@ -133,14 +100,12 @@ app.get("/get_projects", async (req, res) => {
 			acc[key] = [];
 		}
 
-		// Remove `name` using destructuring
 		const { project_name, ...rest } = item;
 		acc[key].push(rest);
 
 		return acc;
 	}, {});
 
-	// Attach matches to array1
 	res.json(
 		projects.map((obj) => ({
 			...obj,
