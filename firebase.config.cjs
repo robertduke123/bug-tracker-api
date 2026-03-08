@@ -222,24 +222,24 @@ const getTickets = async () => {
 	return data;
 };
 
-const addProject = async (name, description, contributor) => {
+const addProject = async (name, description, contributors) => {
 	const id = String(await getId("projects"));
 	await setDoc(doc(db, "projects", id), {
 		name: name,
 		description: description,
-		contributors: contributor,
+		contributors: contributors,
 	});
 
 	return "project added successfully";
 };
 
 const editProject = async (data) => {
-	const { project, newName, newDescription, newContributor } = data;
+	const { project, newName, newDescription, newContributors } = data;
 	updateData("tickets", "porject_name", project, { project_name: newName });
 	updateData("projects", "name", project, {
 		name: newName,
 		description: newDescription,
-		contributors: newContributor,
+		contributors: newContributors,
 	});
 	return "project successfully edited";
 };

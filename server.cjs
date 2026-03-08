@@ -37,6 +37,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/token", async (req, res) => {
+	console.log(req.body);
+
 	const refreshToken = req.body.token;
 	const token = await refreshLogin(refreshToken);
 	const data = await verify(token);
@@ -126,9 +128,9 @@ app.get("/get_projects", async (req, res) => {
 });
 
 app.put("/projects", (req, res) => {
-	const { name, description, contributor } = req.body;
+	const { name, description, contributors } = req.body;
 
-	addProject(name, description, contributor).then((data) => res.json(data));
+	addProject(name, description, contributors).then((data) => res.json(data));
 });
 
 app.put("/edit_project", (req, res) => {
