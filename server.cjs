@@ -23,14 +23,25 @@ const {
 	addComment,
 	deleteComment,
 	editPassword,
+	refreshLogin,
 } = require("./firebase.config.cjs");
 
 const app = express();
 app.use(bodyparser.json());
 app.use(cors());
 
+const PORT = process.env.PORT || 4000;
+
 app.get("/", (req, res) => {
 	res.json("it is working!");
+});
+
+app.post("/token", async (req, res) => {
+	const refreshToken = req.body.token;
+	const token = await refreshLogin(refreshToken);
+	const data = await verify(token);
+
+	await getUsers(data.email).then((data) => res.json(data));
 });
 
 app.post("/signin", async (req, res) => {
@@ -150,4 +161,4 @@ app.put("/delete_comment", (req, res) => {
 	deleteComment(req.body).then((data) => res.json(data));
 });
 
-app.listen(4000, () => console.log("app is running"));
+app.listen(PORT, () => console.log("app is running"));
