@@ -51,6 +51,7 @@ app.post("/signin", async (req, res) => {
 	if (!email || !password) {
 		res.status(400).json("incorrect form submission");
 	}
+	console.log(email);
 
 	if (email !== "admin" || email !== "employee") {
 		const valid = await signIn(email, password);
@@ -163,4 +164,6 @@ app.put("/delete_comment", (req, res) => {
 	deleteComment(req.body).then((data) => res.json(data));
 });
 
-app.listen(PORT, () => console.log("app is running"));
+const bcrypt = require("bcrypt");
+
+app.listen(PORT, () => console.log(bcrypt.hashSync("employee", 10)));
