@@ -47,13 +47,24 @@ app.get("/", (req, res) => {
 });
 
 app.post("/token", async (req, res) => {
-	console.log(req.body);
+	console.log("Token payload received:", req.body);
 
-	const refreshToken = req.body.token;
-	const token = await refreshLogin(refreshToken);
-	const data = await verify(token);
+	try {
+		const refreshToken = req.body.token;
+		if (!refreshToken) {
+			return res.status(400).json({ error: "No token provided" });
+		}
 
-	await getUsers(data.email).then((data) => res.json(data));
+		const token = await refreshLogin(refreshToken);
+		const data = await verify(token);
+		const userData = await getUsers(data.email);
+
+		return res.json(userData);
+	} catch (error) {
+		console.error("Token refresh failed:", error.message);
+		// Send a 401 Unauthorized or 403 Forbidden instead of crashing
+		return res.status(403).json({ error: "Invalid or expired refresh token" });
+	}
 });
 
 app.post("/signin", async (req, res) => {
