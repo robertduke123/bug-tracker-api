@@ -28,7 +28,17 @@ const {
 
 const app = express();
 app.use(bodyparser.json());
-app.use(cors());
+
+// --- FIX APPLIED HERE ---
+// Explicitly allow your Render frontend domain and handle preflight requests
+app.use(
+	cors({
+		origin: "https://rpd-bug-tracker.onrender.com",
+		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		allowedHeaders: ["Content-Type", "Authorization"],
+	}),
+);
+// ------------------------
 
 const PORT = process.env.PORT || 4000;
 
@@ -49,7 +59,7 @@ app.post("/token", async (req, res) => {
 app.post("/signin", async (req, res) => {
 	const { email, password } = req.body;
 	if (!email || !password) {
-		res.status(400).json("incorrect form submission");
+		return res.status(400).json("incorrect form submission"); // Added missing 'return' to prevent code execution continuation
 	}
 	console.log(email);
 
@@ -75,7 +85,7 @@ app.post("/signin", async (req, res) => {
 app.post("/register", (req, res) => {
 	const { firstName, lastName, phone, email, password } = req.body;
 	if (!email || !firstName || !lastName || !password) {
-		res.status(400).json("incorrect form submission");
+		return res.status(400).json("incorrect form submission"); // Added missing 'return'
 	}
 
 	registerUser(req.body).then((data) => res.json(data));
@@ -166,4 +176,6 @@ app.put("/delete_comment", (req, res) => {
 
 const bcrypt = require("bcrypt");
 
+// Note: It's usually cleaner to log a "Server running on port" message here,
+// but keeping your bcrypt sync logging intact!
 app.listen(PORT, () => console.log(bcrypt.hashSync("employee", 10)));
